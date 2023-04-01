@@ -11,10 +11,10 @@ jobs:
       - name: login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.io
+          username: chand1012
+          password: ${{ secrets.DOCKER_HUB }}
       - name: Build Image
         run: |
-          docker build -t ghcr.io/${{ github.actor }}/summarizer-discord:latest .
-          docker push ghcr.io/${{ github.actor }}/summarizer-discord:latest
+          docker build -t chand1012/summarizer-discord:latest .
+          docker push chand1012/summarizer-discord:latest
