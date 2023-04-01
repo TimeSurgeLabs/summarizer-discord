@@ -65,7 +65,7 @@ async def on_message(message: Message):
         logger.error(e)
         await m.edit(content='Error generating summary. If this is a valid video, please try again later.')
 
-@bot.slash_command(name="summary", description="Get a summary of a YouTube video.", guild_ids=[int(TESTING_GUILD_ID)])
+@bot.slash_command(name="yt", description="Get a summary of a YouTube video.", guild_ids=[int(TESTING_GUILD_ID)])
 async def summary_command(
     interaction: Interaction,
     video: str = SlashOption(description="The URL of a YouTube video.", required=True)

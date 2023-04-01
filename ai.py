@@ -1,5 +1,6 @@
 import os
 import asyncio
+import math
 
 import openai
 
@@ -23,7 +24,8 @@ async def parallel_chat_gpt_request(prompts: list[str], model: str) -> list[str]
     return await asyncio.gather(*responses)
 
 async def chat_gpt_request(transcript: str, model: str = 'gpt-3.5-turbo') -> str:
-    tokens = len(transcript) // 4
+    # round up to not risk going over on tokens in the case of a floor
+    tokens = math.ceil(len(transcript) / 4)
 
     # max 3k tokens
     max_tokens = 3000
