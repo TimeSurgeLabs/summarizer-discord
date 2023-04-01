@@ -36,7 +36,9 @@ async def on_message(message: Message):
     if not videoId:
         return
     logger.info(f'Getting transcript for {videoId}...')
+    m = await message.channel.send('Generating summary...')
     try:
+        # send a loading message first
         resp = db.get_transcript(videoId)
         transcript = resp['transcript']
         title = resp['title']
@@ -48,19 +50,20 @@ async def on_message(message: Message):
             pass
         if summary:
             logger.info('Summary already exists. Posting...')
-            await message.channel.send(f'Summary for "{title}"\n\n{summary.summary}')
+            # edit the loading message
+            await m.edit(content=f'Summary for "{title}"\n\n{summary.summary}')
             return
         logger.info('Generating summary...')
         start = time.time()
         summary = await chat_gpt_request(transcript)
         end = time.time()
         logger.info(f'Took {round(end-start, 2)}s to generate summary.')
-        await message.channel.send(f'Summary for "{title}"\n\n{summary}')
+        await m.edit(content=f'Summary for "{title}"\n\n{summary}')
         logger.info(f'Posting summary to db...')
         db.post_summary(videoId, summary)
     except Exception as e:
         logger.error(e)
-        await message.channel.send('Error generating summary. If this is a valid video, please try again later.')
+        await m.edit(content='Error generating summary. If this is a valid video, please try again later.')
 
 @bot.slash_command(name="summary", description="Get a summary of a YouTube video.", guild_ids=[int(TESTING_GUILD_ID)])
 async def summary_command(
