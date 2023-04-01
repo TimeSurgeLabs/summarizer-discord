@@ -8,6 +8,8 @@ nextcord = "*"
 openai = "*"
 pocketbase = "*"
 python-dotenv = "*"
+httpx = "*"
+loguru = "*"
 
 [dev-packages]
 
