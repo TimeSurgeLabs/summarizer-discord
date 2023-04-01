@@ -7,7 +7,10 @@ load_dotenv()
 
 TESTING_GUILD_ID = os.getenv('TESTING_GUILD_ID')
 
-bot = commands.Bot()
+intents = nextcord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(intents=intents)
 
 @bot.event
 async def on_ready():
