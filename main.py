@@ -30,6 +30,8 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: Message):
+    if not ('youtube.com' in message.content or 'youtu.be' in message.content):
+        return
     if message.author.bot or message.author.id == bot.user.id:
         return
     videoId = get_youtube_video_id(message.content)
