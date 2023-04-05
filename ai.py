@@ -1,8 +1,8 @@
 import os
-import asyncio
 import math
 
 import openai
+from loguru import logger
 
 from utils import split_string_on_space
 
@@ -19,9 +19,9 @@ def req(prompt: str, model: str):
 
     return resp['choices'][0]['message']['content']
 
-async def parallel_chat_gpt_request(prompts: list[str], model: str) -> list[str]:
-    responses = [req(prompt, model) for prompt in prompts]
-    return await asyncio.gather(*responses)
+# async def parallel_chat_gpt_request(prompts: list[str], model: str) -> list[str]:
+#     responses = [req(prompt, model) for prompt in prompts]
+#     return await asyncio.gather(*responses)
 
 async def chat_gpt_request(transcript: str, model: str = 'gpt-3.5-turbo') -> str:
     # round up to not risk going over on tokens in the case of a floor
@@ -37,7 +37,16 @@ async def chat_gpt_request(transcript: str, model: str = 'gpt-3.5-turbo') -> str
     else:
         return req(transcript, model)
 
-    responses = await parallel_chat_gpt_request(prompts, model)
+    # responses = await parallel_chat_gpt_request(prompts, model)
+    responses = []
+    for prompt in prompts:
+        try:
+            responses.append(req(prompt, model))
+        except Exception as e:
+            logger.error(e)
+            # it sounds silly, but
+            # getting a random sentence in here
+            # may be a good idea.
 
     text = ' '.join(responses)
 
