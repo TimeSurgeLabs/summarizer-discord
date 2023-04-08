@@ -22,8 +22,20 @@ class DB:
         url = f'{self.url}/youtube/transcript/{video_id}'
         resp = httpx.get(url)
         return resp.json()
+    
+    def get_summary(self, video_id: str, channel_id: str = ""):
+        token = self.get_auth_token()
+        if not token:
+            raise Exception('Not logged in')
+        url = f'{self.url}/ai/summary/{video_id}'
+        resp = httpx.get(url, headers={
+            'Authorization': token,
+            "discordChannelId": channel_id
+        })
 
-    def get_summary(self, video_id: str):
+        return resp.json()
+
+    def fetch_summary(self, video_id: str):
         resp = self.pb.collection('summaries').get_list(1, 1, {
             'filter': f'videoId="{video_id}"'
         })
@@ -35,6 +47,9 @@ class DB:
             'summary': summary
         })
         return resp
+    
+    def get_auth_token(self):
+        return self.pb.auth_store.token
     
 if __name__=='__main__':
     db = DB('http://127.0.0.1:8090')
