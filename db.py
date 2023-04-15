@@ -21,7 +21,7 @@ class DB:
 
     def get_transcript(self, video_id: str):
         url = f'{self.url}/youtube/transcript/{video_id}'
-        resp = httpx.get(url, timeout=60)
+        resp = httpx.get(url, timeout=120)
         return resp.json()
 
     def get_summary(self, video_id: str, channel_id: str = ""):
