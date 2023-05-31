@@ -45,7 +45,11 @@ async def on_message(message: Message):
         error = resp.get('error')
         if error:
             raise Exception(error)
+        if title:
+            await m.edit(content=f'Generating summary for "{title}"...')
+        logger.info('Got transcript. Generating summary...')
         resp = db.get_summary(videoId, str(message.channel.id))
+        print(resp)
         error = resp.get('error')
         summary = resp.get('summary')
         if error:

@@ -32,7 +32,7 @@ class DB:
         resp = httpx.get(url, headers={
             'Authorization': token,
             "discordChannelId": channel_id
-        }, timeout=60)
+        }, timeout=300)
 
         return resp.json()
 
